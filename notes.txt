@@ -1,0 +1,17 @@
+
+Tue 09/24/2013 
+20:52
+
+Catalina Yacht.
+
+
+
+Four Sail
+Controls
+1 Steer left/right
+2 IJKL Mainsail left/right
+3 WASD Headsail left
+4 TFGH Headsail right
+-30sec: Behind start.
++30sec: Race up.
+

@@ -1,5 +1,7 @@
 package 
 {
+    import flash.automation.StageCaptureEvent;
+    import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -8,11 +10,15 @@ package
 	import flash.utils.Timer;
 	
 	/**
-	 * ...
+	 * Copied from
 	 * @author Norwigi
 	 */
 	public class Main extends Sprite 
 	{
+        [Embed(source = "../bin/foursail.swf", symbol = "Screen")] 
+        private static var Screen:Class;
+        private var screen:DisplayObjectContainer;
+        
 		//Setting the players
 		public var player1:Player = new Player(1);
 		public var player2:Player = new Player(2);
@@ -53,7 +59,9 @@ package
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			ChainJam.init();
-			
+			screen = new Screen();
+            addChild(screen);
+            /*-
 			// entry point
 			
 			graphics.beginFill(0x000000);
@@ -77,7 +85,7 @@ package
 				i--;
 			}
 			cooldownTimer.addEventListener(TimerEvent.TIMER, actionCooldown);
-			
+			-*/
 		}
 		
 		public function capture(pl:int):void {
