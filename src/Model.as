@@ -10,12 +10,22 @@ package
     public class Model 
     {
         private static var rotationElapsed:Number = 0.05;
+        private static var rudderAcceleration:Number = 0.00001;
 
         internal var windRotation:Number;
+        internal var boatSpeed:Number;
         internal var boatRotation:Number;
+        internal var boatX:Number;
+        internal var boatY:Number;
         internal var headsailRotation:Number;
         internal var mainsailRotation:Number;
         internal var rudderRotation:Number;
+        internal var worldOriginRotation:Number;
+        internal var worldOriginX:Number;
+        internal var worldOriginY:Number;
+
+        private var boatRotationAcceleration:Number;
+        private var boatRotationVelocity:Number;
 
         internal var now:int;
         internal var previous:int;
@@ -33,10 +43,18 @@ package
             this.input = input;
             var boat:* = screen.map.boat;
             boatRotation = boat.rotation;
-            windRotation = boat.wind.rotation - boatRotation;
-            headsailRotation = boat.headsail.rotation - boatRotation;
-            mainsailRotation = boat.mainsail.rotation - boatRotation;
-            rudderRotation = boat.rudder.rotation - boatRotation;
+            windRotation = boat.wind.rotation;
+            headsailRotation = boat.headsail.rotation;
+            mainsailRotation = boat.mainsail.rotation;
+            rudderRotation = boat.rudder.rotation;
+            boatRotationAcceleration = 0.0;
+            boatRotationVelocity = 0.0;
+            boatX = boat.x;
+            boatY = boat.y;
+            boatSpeed = 0.0;
+            worldOriginRotation = screen.world.boat.rotation;
+            worldOriginX = screen.world.x;
+            worldOriginY = screen.world.y;
             now = previous = getTimer();
             elapsed = 0;
             screen.addEventListener(Event.ENTER_FRAME, update, false, 0, true);
@@ -52,19 +70,107 @@ package
         private function update(e:Event=null):void
         {
             updateTime();
+            updateInput();
+            updatePhysics();
+            updateView();
+        }
+
+        private function updateInput():void
+        {
             if (true == input.keys[ChainJam.PLAYER1_LEFT]) {
                 rudderRotation -= elapsed * rotationElapsed;
             }
             if (true == input.keys[ChainJam.PLAYER1_RIGHT]) {
                 rudderRotation += elapsed * rotationElapsed;
             }
+            if (true == input.keys[ChainJam.PLAYER2_LEFT]) {
+                mainsailRotation += elapsed * rotationElapsed;
+            }
+            if (true == input.keys[ChainJam.PLAYER2_RIGHT]) {
+                mainsailRotation -= elapsed * rotationElapsed;
+            }
+            if (true == input.keys[ChainJam.PLAYER3_RIGHT]
+             || true == input.keys[ChainJam.PLAYER3_LEFT]) {
+                headsailRotation += elapsed * rotationElapsed;
+            }
+            if (true == input.keys[ChainJam.PLAYER4_RIGHT]
+             || true == input.keys[ChainJam.PLAYER4_LEFT]) {
+                headsailRotation -= elapsed * rotationElapsed;
+            }
+        }
+
+        private function updatePhysics():void
+        {
+            rudderRotation = clampRotation(rudderRotation);
+            boatRotationAcceleration = -rudderRotation * rudderAcceleration;
+            boatRotationVelocity += boatRotationAcceleration;
+            boatRotation += boatRotationVelocity;
+            boatRotation = modRotation(boatRotation);
+            boatSpeed = 0.1;
+            boatX += boatSpeed * Math.cos(deg2rad(boatRotation));
+            boatY += boatSpeed * Math.sin(deg2rad(boatRotation));
+        }
+
+        private function clampRotation(rotation:Number):Number
+        {
+            rotation = modRotation(rotation);
+            var maxRotation:int = 75.0;
+            if (rotation < -maxRotation) {
+                rotation = -maxRotation;
+            }
+            else if (maxRotation < rotation) {
+                rotation = maxRotation;
+            }
+            return rotation;
+        }
+
+        private function modRotation(rotation:Number):Number
+        {
+            if (isNaN(rotation)) {
+                throw new Error("Expected rotation is a number " + rotation);
+            }
+            while (rotation < -180.0) {
+                rotation += 360.0;
+            }
+            while (180.0 < rotation) {
+                rotation -= 360.0;
+            }
+            return rotation;
+        }
+
+        private function updateView():void
+        {
+            screen.map.boat.rotation = boatRotation;
+            screen.map.boat.x = boatX;
+            screen.map.boat.y = boatY;
             updateBoatView(screen.map.boat);
+            // TODO: updateWorldView();
             updateBoatView(screen.world.boat);
+        }
+
+        /**
+         * TODO
+         */
+        private function updateWorldView():void
+        {
+            screen.world.boat.x = boatX;
+            screen.world.boat.y = boatY;
+            screen.world.x = worldOriginX - screen.world.scaleX * boatX * Math.cos(deg2rad(-boatRotation));
+            screen.world.y = worldOriginY - screen.world.scaleY * boatY * Math.sin(deg2rad(-boatRotation));
+            screen.world.rotation = worldOriginRotation - boatRotation;
+            screen.world.boat.rotation = boatRotation;
         }
 
         private function updateBoatView(boat:*):void
         {
-            boat.rudder.rotation = rudderRotation + boatRotation;
+            boat.rudder.rotation = rudderRotation;
+            boat.mainsail.rotation = mainsailRotation;
+            boat.headsail.rotation = headsailRotation;
+        }
+
+        private function deg2rad(degree:Number):Number
+        {
+            return degree / 180.0 * Math.PI;
         }
     }
 }
