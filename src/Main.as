@@ -1,7 +1,6 @@
 package 
 {
-    import flash.automation.StageCaptureEvent;
-    import flash.display.DisplayObjectContainer;
+    import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -15,9 +14,11 @@ package
 	 */
 	public class Main extends Sprite 
 	{
-        [Embed(source = "../bin/foursail.swf", symbol = "Screen")] 
-        private static var Screen:Class;
-        private var screen:DisplayObjectContainer;
+        [Embed(source = "../bin/foursail_assets.swf", symbol = "Screen")] 
+        internal static var Screen:Class;
+        private var input:Input;
+        private var model:Model;
+        private var screen:*;
         
 		//Setting the players
 		public var player1:Player = new Player(1);
@@ -60,6 +61,8 @@ package
 			
 			ChainJam.init();
 			screen = new Screen();
+            input = new Input(stage);
+            model = new Model(screen, input);
             addChild(screen);
             /*-
 			// entry point
