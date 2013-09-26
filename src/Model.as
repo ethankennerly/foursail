@@ -37,6 +37,7 @@ package
          */
         internal var screen:*;
         internal var input:Input;
+        private var hudToggled:Boolean;
 
         public function Model(screen:*, input:Input) 
         {
@@ -58,6 +59,8 @@ package
             worldOriginRotation = screen.world.boat.rotation;
             now = previous = getTimer();
             elapsed = 0;
+            screen.hud.visible = false;
+            hudToggled = false;
             screen.addEventListener(Event.ENTER_FRAME, update, false, 0, true);
         }
 
@@ -99,19 +102,56 @@ package
              || true == input.keys[ChainJam.PLAYER4_LEFT]) {
                 headsailRotation -= elapsed * rotationElapsed;
             }
+            if (true == input.keys[ChainJam.PLAYER1_ACTION1]) {
+                if (!hudToggled) {
+                    screen.hud.visible = !screen.hud.visible;
+                }
+                hudToggled = true;
+            }
+            else {
+                hudToggled = false;
+            }
         }
 
         /**
          * 13/9/25 Mark Palange expects to sail faster away from the wind perpendicular to start line.
+         * Mark expects slow to sail upwind. Faster to sail downwind.
          */
         private function updatePhysics():void
         {
+            headsailRotation = clampRotation(headsailRotation);
+            mainsailRotation = clampRotation(mainsailRotation);
             var elapsedPortion:Number = elapsed / 100.0 * 3;
             var drag:Number = boatSpeed * elapsedPortion;
-            var wind:Number = Math.abs(Math.cos(deg2rad(modRotation(windRotation - boatRotation))));
-            var mainWind:Number = Math.abs(Math.cos(deg2rad(modRotation(windRotation - boatRotation))));
-            boatAcceleration = Math.max(-0.1 * boatSpeed, boatAcceleration - drag + wind);
+            var boatWindRotation:Number = modRotation(windRotation - boatRotation - 90.0);
+            var wind:Number = 2 * Math.abs(Math.sin(deg2rad(boatWindRotation)));
+            if (boatWindRotation > -135 || 135 < boatWindRotation) {
+                wind /= 5.0;
+            }
+            else if (-45 < boatWindRotation && boatWindRotation < 45) {
+                wind = Math.abs(wind);
+            }
+            screen.hud.wind.text = boatWindRotation.toFixed(0) + ": " + wind.toFixed(2);
+            var optimalSailRotation:Number = 0.0;
+                                             // -135.0;
+            var mainsailWindRotation:Number = modRotation(windRotation - mainsailRotation - boatRotation - 90.0);
+            if (boatWindRotation > -90 || boatWindRotation < 90) {
+                if (-135 <= mainsailWindRotation && mainsailWindRotation <= 135) {
+                    mainsailWindRotation /= 5.0;
+                }
+                if (-135 <= headsailWindRotation && headsailWindRotation <= 135) {
+                    headsailWindRotation /= 5.0;
+                }
+            }
+            var headsailWindRotation:Number = modRotation(windRotation - headsailRotation - boatRotation - 90.0);
+            var mainsailWind:Number = 0.5 * Math.abs(Math.sin(deg2rad(modRotation(mainsailWindRotation + optimalSailRotation))));
+            screen.hud.mainsailWind.text = mainsailWindRotation.toFixed(0) + ": " + mainsailWind.toFixed(2);
+            var headsailWind:Number = 0.5 * Math.abs(Math.cos(deg2rad(modRotation(headsailWindRotation + optimalSailRotation))));
+            boatAcceleration = Math.max(-0.1 * boatSpeed, boatAcceleration - drag + Math.min(wind, mainsailWind, headsailWind));
             boatSpeed += boatAcceleration * elapsedPortion;
+            if (boatX < -100 || 100 < boatX || boatY < -420 || 40 < boatY) {
+                boatSpeed /= 10.0;
+            }
             rudderRotation = clampRotation(rudderRotation);
             boatRotationAcceleration = -rudderRotation * rudderAcceleration * Math.max(0.1, boatSpeed) * elapsed / 33.3;
             boatRotationVelocity += boatRotationAcceleration;

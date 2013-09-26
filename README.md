@@ -8,8 +8,5 @@ J/L Main left/right
 D Head left
 F Head right
 
--30sec Approach
-+30sec Race!
-
 Four Sail
 Ethan Kennerly
