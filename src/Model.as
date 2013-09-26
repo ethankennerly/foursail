@@ -13,6 +13,7 @@ package
         private static var rudderAcceleration:Number = 0.0002;
 
         internal var windRotation:Number;
+        internal var boatAcceleration:Number;
         internal var boatSpeed:Number;
         internal var boatRotation:Number;
         internal var boatX:Number;
@@ -43,7 +44,7 @@ package
             this.input = input;
             var boat:* = screen.map.boat;
             boatRotation = boat.rotation;
-            windRotation = boat.wind.rotation;
+            windRotation = boat.wind.rotation + boat.rotation;
             headsailRotation = boat.headsail.rotation;
             mainsailRotation = boat.mainsail.rotation;
             rudderRotation = boat.rudder.rotation;
@@ -51,6 +52,7 @@ package
             boatRotationVelocity = 0.0;
             boatX = boat.x;
             boatY = boat.y;
+            boatAcceleration = 0.01;
             boatSpeed = 0.0;
             worldOriginRotation = screen.world.boat.rotation;
             worldOriginX = screen.world.x;
@@ -78,10 +80,10 @@ package
         private function updateInput():void
         {
             if (true == input.keys[ChainJam.PLAYER1_LEFT]) {
-                rudderRotation -= elapsed * rotationElapsed;
+                rudderRotation += elapsed * rotationElapsed;
             }
             if (true == input.keys[ChainJam.PLAYER1_RIGHT]) {
-                rudderRotation += elapsed * rotationElapsed;
+                rudderRotation -= elapsed * rotationElapsed;
             }
             if (true == input.keys[ChainJam.PLAYER2_LEFT]) {
                 mainsailRotation += elapsed * rotationElapsed;
@@ -101,15 +103,20 @@ package
 
         private function updatePhysics():void
         {
-            boatSpeed = 0.05;  // debug updateWorldView
+            var elapsedPortion:Number = elapsed / 100.0 * 3;
+            var drag:Number = boatSpeed * elapsedPortion;
+            var wind:Number = Math.abs(Math.cos(deg2rad(modRotation(windRotation - boatRotation))));
+            boatAcceleration = Math.max(-0.1 * boatSpeed, boatAcceleration - drag + wind);
+            boatSpeed += boatAcceleration * elapsedPortion;
+                        // 0.05;  // debug updateWorldView
                         // 0.2;
             rudderRotation = clampRotation(rudderRotation);
-            boatRotationAcceleration = -rudderRotation * rudderAcceleration * boatSpeed;
+            boatRotationAcceleration = -rudderRotation * rudderAcceleration * Math.max(0.1, boatSpeed) * elapsed / 33.3;
             boatRotationVelocity += boatRotationAcceleration;
             boatRotation += boatRotationVelocity;
             boatRotation = modRotation(boatRotation);
-            boatX += boatSpeed * Math.cos(deg2rad(boatRotation));
-            boatY += boatSpeed * Math.sin(deg2rad(boatRotation));
+            boatX += boatSpeed * Math.cos(deg2rad(boatRotation)) * elapsedPortion;
+            boatY += boatSpeed * Math.sin(deg2rad(boatRotation)) * elapsedPortion;
         }
 
         private function clampRotation(rotation:Number):Number
@@ -168,6 +175,7 @@ package
             boat.rudder.rotation = rudderRotation;
             boat.mainsail.rotation = mainsailRotation;
             boat.headsail.rotation = headsailRotation;
+            boat.wind.rotation = windRotation - boat.rotation;
         }
 
         private function deg2rad(degree:Number):Number
