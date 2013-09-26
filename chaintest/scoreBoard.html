@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<!--
+#####################
+# Mini Game Machine #
+#####################
+File: scoreBoard.html
+Created by: Sam Walz <mail[at]samwalz.com> 09. September 2013
+Last changed by: Sam Walz <mail[at]samwalz.com> 12. September 2013
+-->
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="chainjam.css">
+</head>
+<body onkeypress="parent.AnotherRound();">
+    <div id="gameScoreList">
+      <div class="logo"></div>
+      <div class="playerCols">
+        <div class="scorePlayer1"></div>
+        <div class="scorePlayer2"></div>
+        <div class="scorePlayer3"></div>
+        <div class="scorePlayer4"></div>
+      </div>
+
+<!-- Script output Start -->
+      <script type="text/javascript">
+        var currentItem = parent._selectedGames;
+        while (currentItem)
+        {
+            $("#gameScoreList").append('<div class="scoreBoardGameTitle">' + currentItem.name + '</div>'
+                                       + '<div class="scoreBoardPlayerScore">'
+                                         + '<div class="scorePlayer1">' + currentItem.score[0] + '</div>'
+                                         + '<div class="scorePlayer2">' + currentItem.score[1] + '</div>'
+                                         + '<div class="scorePlayer3">' + currentItem.score[2] + '</div>'
+                                         + '<div class="scorePlayer4">' + currentItem.score[3] + '</div>'
+                                      + '</div>');
+            currentItem = currentItem.next;
+        }
+      </script>
+<!-- Script output Stop -->
+      
+      <div class="scoreBoardResults">
+        <!-- Calculated Score Row -->
+        <div class="scoreBoardGameTitle">TOTAL</div>
+        <div class="scoreBoardPlayerScore">
+          <div class="scorePlayer1">0</div>
+          <div class="scorePlayer2">0</div>
+          <div class="scorePlayer3">0</div>
+          <div class="scorePlayer4">0</div>
+        </div>
+        <!-- Winner Color -->
+        <div class="scoreBoardGameTitle" id="winner">WINNER</div>
+          <!-- FIGURE THIS ONE OUT -->
+      <div class="scoreBoardInstructions">A or B to restart</div>
+    </div>
+  </body>
+</html>

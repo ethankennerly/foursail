@@ -1,0 +1,396 @@
+
+body {
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	color: white;
+	line-height: 1.5em;
+	margin:0px;
+	vertical-align:top;
+	overflow: hidden;
+}
+
+iframe {
+	border: none;
+}
+
+div {
+	margin:0px;
+	padding:0px;
+}
+
+
+div:focus {
+	border-style:none;
+}
+
+embed:focus {
+	border-style:none;
+}
+
+a:link, a:visited {
+	color: #000;
+}
+a:active, a:hover {
+	color: #666;
+}
+p.header {
+	font-size: small;
+}
+p.header span {
+	font-weight: bold;
+}
+p.footer {
+	font-size: x-small;
+}
+div.content {
+	margin: auto;
+	width: 800px;
+}
+div.broken,
+div.missing {
+	margin: auto;
+	position: relative;
+	top: 50%;
+	width: 193px;
+}
+div.broken a,
+div.missing a {
+	height: 63px;
+	position: relative;
+	top: -31px;
+}
+div.broken img,
+div.missing img {
+	border-width: 0px;
+}
+div.broken {
+	display: none;
+}
+
+div#sideBarLeft {
+	top:0px;
+	width: 33.3333333%;
+	float: left;
+}
+
+div#content {
+	display:inline-block;
+	width: 66.6666666%;
+	float: left;
+}
+
+div#sideBarRight {
+	width: 33.3333333%;
+	text-align: left;
+	float: left;
+}
+
+div#score {
+	position:fixed;
+	left:100px;
+}
+
+div#unityPlayer {
+	cursor: default;
+	height: 450px;
+	width: 800px;
+}
+
+div.score {
+	width: 100%;
+	height:150px;
+}
+
+div.scoreBox {
+	display:inline-block;
+	width:200px;
+}
+
+div.gameScore {
+	font-size:84px;
+}
+
+div.totalScore {
+	font-size:42px;
+}
+
+.scorePlayer1 {
+	color:#313232;
+	background-color: #313232;
+}
+
+.scorePlayer2 {
+	color:#27ADE3;
+	background-color: #27ADE3;
+}
+
+.scorePlayer3 {
+	color:#EE368A;
+	background-color: #EE368A;
+}
+
+.scorePlayer4 {
+	color:#B0D136;
+	background-color: #B0D136;
+}
+
+.gameCube {
+	background-color: #ADBECF;
+	display: inline-block;
+	border:2px dashed #848484;
+	margin: 1px;
+}
+
+.gameCubeActive {
+	background-color: #848484;
+	border: 2px dashed #424242;
+	margin: 1px;
+}
+
+.gameCubeSolved {
+	background-color: #FFFFFF;
+	border: 2px solid #424242;
+}
+
+.gameCubeDamaged {
+	border: 2px dashed red;
+}
+
+
+.gameCubePlayer1 {
+	background-color:#313232;
+}
+
+.gameCubePlayer2 {
+	background-color:#27ADE3;
+}
+
+.gameCubePlayer3 {
+	background-color:#EE368A;
+}
+
+.gameCubePlayer4 {
+	background-color:#B0D136;
+}
+
+div#gameList {
+	display:none;
+	overflow:auto;
+	height:750px;
+}
+
+.gameChosen {
+	text-decoration:none;
+}
+.gameUnchosen {
+	text-decoration:line-through;
+}
+
+.menuEntry {
+	opacity: 0.6;	
+}
+
+
+/*------------------------------
+			Jonas
+------------------------------*/
+
+/**************
+COLORS
+***************
+Blue: #27ade3
+Pink: #ee368a
+Orange: #f57b20
+Light Grey: #696a6c
+Dark Grey: #313232
+Green: #b0d136
+**************/
+
+div.logo {
+	padding: 8% 0;
+	background-image: url('img/logo.svg');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 50%;
+}
+
+/**************
+INDEX
+**************/
+
+#score div {
+	background-color: #FFFFFF;
+	text-align: center;
+	line-height: 1.2em;
+}
+
+#sideBarRight,#sideBarLeft {
+	color: #313232;
+}
+
+/**************
+MENU
+**************/
+
+div#MenuMain {
+	background-color: #f57b20;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	font-size: 280%;
+}
+
+div.MenuMainOptions {
+	text-align: left;
+	margin-left: 15%;
+	margin-right: 15%;
+	width: 70%;	
+	line-height: 1.5em;
+}
+
+.MenuMainOptions div {
+	padding-left: 1%;
+	padding-right: 1%;
+	/*padding-right: 2%;*/
+}
+
+div.menuEntrySelected {
+	/*BACKGROUND SECTION*/
+	background-color: #DB6C18;
+	font-style: italic;
+	display: block;
+	/*TRIANGLE SELCTION*/
+	/*background-image: url('img/selected.svg');
+	background-repeat: no-repeat;
+	background-position: 0%;
+	padding-left: 4%;*/
+	}
+
+div.MenuMainInstructions {
+	width: 100%;
+	font-size: 55%;
+	line-height: 150%;
+	font-style: italic;
+	position: absolute;
+	bottom: 0;
+	margin-bottom: 5%;
+	text-align: center;
+}
+
+div#MenuMainGameNumber {
+	display: block;
+}
+
+div.menuEntrySelected div#MenuMainGameNumberNumber {
+	text-decoration: underline;
+	font-style: italic;
+}
+
+/**************
+SCORE BOARD
+**************/
+
+div#gameScoreList {
+	background-color: #696a6c;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	font-size: 180%;
+	line-height: 150%;
+}
+
+.playerCols {
+	height: 5%;
+	margin-left: 43%;
+	margin-bottom:1%;
+	display: block;
+}
+
+.playerCols div {
+	width: 5%;
+	height: 100%;
+	margin-right:9.1%;
+	display: inline-block;
+}
+
+.scoreBoardGameTitle {
+	width: 40%;
+	display: inline-block;
+	text-align: right;
+}
+
+.scoreBoardPlayerScore {
+	display: inline;
+}
+
+.scoreBoardPlayerScore div {
+	width: 8.8%;
+	display: inline-block;
+	text-align: center;
+	background-color: #696a6c;
+}
+
+.scoreBoardResults div {
+	margin-top: 2.5%;
+}
+
+div#winner {
+	font-size: 200%;
+	display: block;
+}
+
+.scoreBoardInstructions {
+	text-align: center;
+	font-style: italic;
+	padding-top: 2%;
+}
+
+/*div.winner div {
+	display: inline-block;
+	margin-left: 43%;
+}*/
+
+/**************
+CREDITS
+**************/
+
+div#countDown {
+	background-color: #27ade3;
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	font-size: 180%;
+	line-height: 150%;
+	text-align: center;
+}
+
+#countDownWrapper {
+	width: 90%;
+	margin-left: 5%;
+	margin-right: 5%;
+}
+
+#gameName {
+	font-size: 250%;
+	line-height: 120%;
+}
+
+div#gameCreditsWrapper {
+	width: 100%;
+	text-align: center;
+	display: block;
+	margin-bottom: 3%;
+}
+
+#gameCreditsWrapper div {
+	display: inline;
+}
+
+#gameCredits {
+	padding-left: 1%;
+	font-style: italic;
+}
+
+#gameCountdown {
+	font-size: 250%;
+	margin-bottom: 4%;
+}
