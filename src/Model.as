@@ -10,7 +10,7 @@ package
     public class Model 
     {
         private static var rotationElapsed:Number = 0.05;
-        private static var rudderAcceleration:Number = 0.00001;
+        private static var rudderAcceleration:Number = 0.0002;
 
         internal var windRotation:Number;
         internal var boatSpeed:Number;
@@ -101,12 +101,13 @@ package
 
         private function updatePhysics():void
         {
+            boatSpeed = 0.05;  // debug updateWorldView
+                        // 0.2;
             rudderRotation = clampRotation(rudderRotation);
-            boatRotationAcceleration = -rudderRotation * rudderAcceleration;
+            boatRotationAcceleration = -rudderRotation * rudderAcceleration * boatSpeed;
             boatRotationVelocity += boatRotationAcceleration;
             boatRotation += boatRotationVelocity;
             boatRotation = modRotation(boatRotation);
-            boatSpeed = 0.1;
             boatX += boatSpeed * Math.cos(deg2rad(boatRotation));
             boatY += boatSpeed * Math.sin(deg2rad(boatRotation));
         }
@@ -114,7 +115,7 @@ package
         private function clampRotation(rotation:Number):Number
         {
             rotation = modRotation(rotation);
-            var maxRotation:int = 75.0;
+            var maxRotation:int = 45.0;
             if (rotation < -maxRotation) {
                 rotation = -maxRotation;
             }
@@ -144,23 +145,24 @@ package
             screen.map.boat.x = boatX;
             screen.map.boat.y = boatY;
             updateBoatView(screen.map.boat);
-            // TODO: updateWorldView();
+            updateWorldView();
             updateBoatView(screen.world.boat);
         }
 
         /**
-         * TODO
+         * Relative to the boat.
          */
         private function updateWorldView():void
         {
-            screen.world.boat.x = boatX;
-            screen.world.boat.y = boatY;
-            screen.world.x = worldOriginX - screen.world.scaleX * boatX * Math.cos(deg2rad(-boatRotation));
-            screen.world.y = worldOriginY - screen.world.scaleY * boatY * Math.sin(deg2rad(-boatRotation));
+            screen.world.environment.x = -boatX;
+            screen.world.environment.y = -boatY;
             screen.world.rotation = worldOriginRotation - boatRotation;
             screen.world.boat.rotation = boatRotation;
         }
 
+        /**
+         * Relative to the map or world.
+         */
         private function updateBoatView(boat:*):void
         {
             boat.rudder.rotation = rudderRotation;
