@@ -11,6 +11,7 @@ package
     {
         private static var rotationElapsed:Number = 0.05;
         private static var rudderAcceleration:Number = 0.0002;
+        private static var scoreVelocityY:Number = -150;
 
         internal var windRotation:Number;
         internal var boatAcceleration:Number;
@@ -18,12 +19,11 @@ package
         internal var boatRotation:Number;
         internal var boatX:Number;
         internal var boatY:Number;
+        internal var scoreY:Number;
         internal var headsailRotation:Number;
         internal var mainsailRotation:Number;
         internal var rudderRotation:Number;
         internal var worldOriginRotation:Number;
-        internal var worldOriginX:Number;
-        internal var worldOriginY:Number;
 
         private var boatRotationAcceleration:Number;
         private var boatRotationVelocity:Number;
@@ -50,13 +50,12 @@ package
             rudderRotation = boat.rudder.rotation;
             boatRotationAcceleration = 0.0;
             boatRotationVelocity = 0.0;
+            scoreY = -120.0;
             boatX = boat.x;
             boatY = boat.y;
             boatAcceleration = 0.01;
             boatSpeed = 0.0;
             worldOriginRotation = screen.world.boat.rotation;
-            worldOriginX = screen.world.x;
-            worldOriginY = screen.world.y;
             now = previous = getTimer();
             elapsed = 0;
             screen.addEventListener(Event.ENTER_FRAME, update, false, 0, true);
@@ -74,6 +73,7 @@ package
             updateTime();
             updateInput();
             updatePhysics();
+            updateScore();
             updateView();
         }
 
@@ -101,15 +101,17 @@ package
             }
         }
 
+        /**
+         * 13/9/25 Mark Palange expects to sail faster away from the wind perpendicular to start line.
+         */
         private function updatePhysics():void
         {
             var elapsedPortion:Number = elapsed / 100.0 * 3;
             var drag:Number = boatSpeed * elapsedPortion;
             var wind:Number = Math.abs(Math.cos(deg2rad(modRotation(windRotation - boatRotation))));
+            var mainWind:Number = Math.abs(Math.cos(deg2rad(modRotation(windRotation - boatRotation))));
             boatAcceleration = Math.max(-0.1 * boatSpeed, boatAcceleration - drag + wind);
             boatSpeed += boatAcceleration * elapsedPortion;
-                        // 0.05;  // debug updateWorldView
-                        // 0.2;
             rudderRotation = clampRotation(rudderRotation);
             boatRotationAcceleration = -rudderRotation * rudderAcceleration * Math.max(0.1, boatSpeed) * elapsed / 33.3;
             boatRotationVelocity += boatRotationAcceleration;
@@ -181,6 +183,18 @@ package
         private function deg2rad(degree:Number):Number
         {
             return degree / 180.0 * Math.PI;
+        }
+        
+        private function updateScore():void
+        {
+            if (boatY < scoreY) {
+                scoreY += scoreVelocityY;
+                trace("score at " + scoreY);
+                Main.score(1);
+                Main.score(2);
+                Main.score(3);
+                Main.score(4);
+            }
         }
     }
 }
