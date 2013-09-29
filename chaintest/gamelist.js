@@ -7,8 +7,8 @@
 
 
 _gamesCounter++;_g[_gamesCounter] = new Object();
-_g[_gamesCounter].name = 'Four Sail';
+_g[_gamesCounter].name = '4sail';
 _g[_gamesCounter].path = 'foursail.swf'; // or .swf or .jar, or path to folder
 _g[_gamesCounter].type = 'flash';  // type: unity / flash / html / java
 _g[_gamesCounter].credits = 'Ethan Kennerly';
-_g[_gamesCounter].instructions = 'Left/Right Steer. J/L Main left/right. D Head left. F Head right. -30sec Approach. +30sec Race!';
+_g[_gamesCounter].instructions = 'Left/Right Steer. J/L Main left/right. D Head left. F Head right. One minute race!';

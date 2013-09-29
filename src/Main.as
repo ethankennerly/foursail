@@ -1,12 +1,7 @@
 package 
 {
-    import flash.display.MovieClip;
     import flash.display.Sprite;
     import flash.events.Event;
-    import flash.events.KeyboardEvent;
-    import flash.events.TimerEvent;
-    import flash.geom.Point;
-    import flash.utils.Timer;
     
     /**
      * Copied from
@@ -43,11 +38,12 @@ package
             addChild(screen);
         }
         
-        public static function score(pl:int):void {
+        public static function score(pl:int, screen:*):void {
             if (totalPoints < 10) {
                 ChainJam.addPoints(pl, 1);
                 totalPoints++;
                 trace(totalPoints);
+                screen.score.text = totalPoints.toString();
             }
             if (10 <= totalPoints) {
                 ChainJam.endGame();
